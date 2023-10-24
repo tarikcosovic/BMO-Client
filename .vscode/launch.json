@@ -3,11 +3,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ng serve",
+      "name": "Launch Chrome Debugger",
       "type": "chrome",
       "request": "launch",
-      "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "webRoot": "${workspaceFolder}",
+      "url": "http://localhost:4200/",
+      "sourceMapPathOverrides": {
+        "meteor://💻app/*": "${workspaceFolder}/*",
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+        "webpack://?:*/*": "${workspaceFolder}/*",
+        "webpack:///./src/*": "${webRoot}/src/*",
+        "webpack:///./*": "${workspaceFolder}/apps/<application>/*"
+      }
     },
     {
       "name": "ng test",
