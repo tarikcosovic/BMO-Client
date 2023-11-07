@@ -1,0 +1,47 @@
+<div class="leaderboard-body">
+  <div class="leaderboard-main">
+    <h2 class="game-title">{{ this.currentGame?.name }}</h2>
+
+    <div id="buttons">
+      <!--<button class="exit">Exit</button>!-->
+      <button class="continue" (click)="prev()">Previous</button>
+      <button class="continue" (click)="next()">Next</button>
+    </div>
+    <div id="header">
+      <h1>Ranking</h1>
+      <button class="share" (click)="OnShareButton($event)">
+        <i class="ph ph-share-network"></i>
+      </button>
+    </div>
+    <div id="leaderboard">
+      <div class="ribbon"></div>
+      <table>
+        <tr *ngFor="let score of scores; index as i">
+          <td class="number">
+            {{ i + 1 }}
+          </td>
+          <td attr.id="{{ score.player.username }}" class="name">
+            {{ score.player.username }}
+          </td>
+          <td class="points">
+            {{ score.value }}
+            <img
+              *ngIf="i == 0"
+              class="gold-medal"
+              src="https://github.com/malunaridev/Challenges-iCodeThis/blob/master/4-leaderboard/assets/gold-medal.png?raw=true"
+              alt="gold medal"
+            />
+          </td>
+          <td [hidden]="!isAdmin" style="text-align: center">
+            <button class="delete">
+              <i
+                class="ph ph-trash"
+                (click)="this.onDeleteScore(score.player.username, $event)"
+              ></i>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

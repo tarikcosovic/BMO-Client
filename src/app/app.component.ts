@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { PlayerService } from './Players/player.service';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,17 +6,10 @@ import { PlayerService } from './Players/player.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  playerService: PlayerService;
+  public isAdmin: boolean = false;
+  constructor() {}
 
-  constructor(playerService: PlayerService) {
-    this.playerService = playerService;
-  }
-
-  ngOnInit() {
-    let data = this.playerService.GetPlayers().subscribe((x) => {
-      console.log(x);
-    });
-
-    console.log(data);
+  hasAdminAuthenticated(event: boolean) {
+    this.isAdmin = event;
   }
 }

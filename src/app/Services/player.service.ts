@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../Common/http.service';
+import { HttpService } from './http-service';
 import { Observable } from 'rxjs';
+import { Player } from '../Common/types';
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +16,5 @@ export class PlayerService {
 
   public GetPlayers(): Observable<Player[]> {
     return this.httpService.GetDataAsync<Player[]>(this.endpointUrl);
-  }
-}
-
-class Player {
-  id: number;
-  username: string;
-
-  constructor(id: number, username: string) {
-    this.id = id;
-    this.username = username;
   }
 }
