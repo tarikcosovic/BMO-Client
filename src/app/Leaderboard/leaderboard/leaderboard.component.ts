@@ -3,16 +3,15 @@ import {
   Component,
   EventEmitter,
   Input,
-  SimpleChange,
+  Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CircularBuffer } from 'src/app/Common/CircularBuffer';
 import { Game, Score } from 'src/app/Common/types';
-import { AuthService } from 'src/app/Services/auth-service';
 import { ConfigService } from 'src/app/Services/config-service';
 import { GameService } from 'src/app/Services/game.service';
 import { ScoresService } from 'src/app/Services/scores.service';
-
+import { generateUsername } from 'friendly-username-generator';
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -23,7 +22,9 @@ export class LeaderboardComponent {
   public games: Array<Game> = [];
   public currentGame: Game | null = null;
 
+  @Input() public isMockDataEnabled: boolean = true;
   @Input() public isAdmin: boolean = false;
+  @Output() hasGameChanged = new EventEmitter<Game>();
 
   private circularBuffer: CircularBuffer<Game> | null = null;
   private currentIndex: number = 0;
@@ -33,7 +34,6 @@ export class LeaderboardComponent {
   constructor(
     private scoreService: ScoresService,
     private gameService: GameService,
-    private authService: AuthService,
     private changeDetectorRef: ChangeDetectorRef,
     private configService: ConfigService
   ) {}
@@ -42,7 +42,9 @@ export class LeaderboardComponent {
     this.GetAllGames();
   }
 
-  ngOnChanges(changes: SimpleChange) {
+  ngOnChanges() {
+    this.toggleMockData();
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -78,7 +80,10 @@ export class LeaderboardComponent {
 
   GetNextGame(game: Game | null) {
     this.currentGame = game;
-    if (this.currentGame) this.GetScoresByGame(this.currentGame.id);
+    if (this.currentGame) {
+      this.GetScoresByGame(this.currentGame.id);
+      this.hasGameChanged.emit(this.currentGame);
+    }
   }
 
   async GetScoresByGame(id: number) {
@@ -86,17 +91,12 @@ export class LeaderboardComponent {
       this.subscriptions$.push(
         this.scoreService.GetScoresByGame(id).subscribe((scores) => {
           this.scores = scores;
-          let mockCount = 100 - this.scores.length;
-          for (let i = 0; i < mockCount; i++) {
-            this.scores.push({
-              player: { id: i, username: 'mock_player' + i.toString() },
-              game: null,
-              value: i,
-            });
-          }
-          this.scores = this.scores.sort((x, y) =>
-            x.value > y.value ? -1 : 1
-          );
+
+          this.GenerateMockData();
+
+          this.scores = this.scores
+            .sort((x, y) => (x.value > y.value ? -1 : 1))
+            .slice(0, 100);
         })
       );
     } catch (exception) {
@@ -146,6 +146,32 @@ export class LeaderboardComponent {
 
       this.changeDetectorRef.detectChanges();
     }, 1000);
+  }
+
+  toggleMockData() {
+    this.GenerateMockData();
+  }
+
+  GenerateMockData() {
+    if (this.scores.length < 100 && this.isMockDataEnabled) {
+      let mockCount = 100 - this.scores.length;
+      for (let i = 0; i < mockCount; i++) {
+        this.scores.push({
+          player: {
+            id: -1,
+            username:
+              generateUsername({
+                useRandomNumber: false,
+                useHyphen: true,
+              }) + i.toString(),
+          },
+          game: null,
+          value: Math.floor(Math.random() * 45),
+        });
+      }
+    } else if (!this.isMockDataEnabled) {
+      this.scores = this.scores.filter((x) => x.player.id != -1);
+    }
   }
 
   OnShareButton(event: any) {
