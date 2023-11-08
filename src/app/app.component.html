@@ -1,7 +1,13 @@
 <div>
   <app-navbar
+    [currentGame]="currentGame"
     (hasAdminAuthenticated)="hasAdminAuthenticated($event)"
+    (toggleMockData)="toggleMockData($event)"
   ></app-navbar>
 
-  <app-leaderboard [isAdmin]="isAdmin"></app-leaderboard>
+  <app-leaderboard
+    (hasGameChanged)="hasGameChanged($event)"
+    [isAdmin]="isAdmin"
+    [isMockDataEnabled]="isMockDataEnabled"
+  ></app-leaderboard>
 </div>

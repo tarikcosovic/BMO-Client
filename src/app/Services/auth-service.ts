@@ -15,27 +15,10 @@ export class AuthService {
 
   constructor(httpService: HttpService) {
     this.httpService = httpService;
-    this.currentRole = Role.User;
+    this.currentRole = localStorage.getItem('admin-key')
+      ? Role.Admin
+      : Role.User;
   }
-
-  // public async AuthenticateUser(key: string = '') {
-  //   return this.httpService
-  //     .GetDataAsync<any>(
-  //       this.endpoint,
-  //       new HttpHeaders().set('Authorization', key)
-  //     )
-  //     .subscribe({
-  //       next: () => {
-  //         this.httpService.SetAuthHeader(key);
-  //         this.currentRole = Role.Admin;
-  //       },
-  //       error: (error) => {
-  //         //Default to user role
-  //         this.currentRole = Role.User;
-  //         console.log('Error while authenticating admin: ' + error);
-  //       },
-  //     });
-  // }
 
   public async AuthenticateUser(key: string = ''): Promise<boolean> {
     return await firstValueFrom(

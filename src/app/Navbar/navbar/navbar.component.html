@@ -7,6 +7,8 @@
         name="hit-area"
         (change)="toggleSearch(true)"
         (change)="toggleAdminLogin(false)"
+        (change)="toggleGameDescription(false)"
+        (change)="toggleOptions(false)"
         checked
       />
       <input
@@ -15,6 +17,8 @@
         name="hit-area"
         (change)="toggleSearch(false)"
         (change)="toggleAdminLogin(false)"
+        (change)="toggleGameDescription(false)"
+        (change)="toggleOptions(true)"
       />
       <input
         class="hit-area"
@@ -22,6 +26,8 @@
         name="hit-area"
         (change)="toggleSearch(false)"
         (change)="toggleAdminLogin(false)"
+        (change)="toggleGameDescription(true)"
+        (change)="toggleOptions(false)"
       />
       <input
         class="hit-area"
@@ -29,6 +35,8 @@
         name="hit-area"
         (change)="toggleSearch(false)"
         (change)="toggleAdminLogin(true)"
+        (change)="toggleGameDescription(false)"
+        (change)="toggleOptions(false)"
       />
       <div class="options">
         <svg
@@ -228,6 +236,45 @@
       placeholder="Enter username.."
     />
   </div>
+
+  <div class="description" *ngIf="this.showOptions">
+    <div [hidden]="this.isAdmin">
+      <p>Admin privileges required.</p>
+    </div>
+    <div [hidden]="!this.isAdmin">
+      <label class="switch">
+        <input
+          [checked]="this.isMocKDataEnabled"
+          type="checkbox"
+          (change)="this.onToggleMockData(this.isMocKDataEnabled)"
+        />
+        <span class="slider round"></span>
+      </label>
+      <p style="display: contents">Toggle Mock Data</p>
+    </div>
+
+    <div [hidden]="!this.isAdmin">
+      <label class="switch">
+        <input
+          [checked]="this.isKeyCachingEnabled"
+          type="checkbox"
+          (change)="this.onToggleKeyCaching(this.isKeyCachingEnabled)"
+        />
+        <span class="slider round"></span>
+      </label>
+      <p style="display: contents">Cache Admin Key</p>
+    </div>
+  </div>
+
+  <div class="description" *ngIf="this.showGameDescription">
+    <p [hidden]="!this.showGameDescription" class="descriptin-text">
+      <span style="font-weight: bold; font-size: larger">{{
+        currentGame?.name
+      }}</span
+      >: {{ currentGame?.description }}
+    </p>
+  </div>
+
   <div class="search">
     <input
       [hidden]="!this.showAdminLogin || this.isAdmin"
@@ -236,7 +283,14 @@
       id="admin-login"
       name="admin-login"
       placeholder="Enter admin key.."
+      maxlength="100"
     />
+    <div
+      *ngIf="this.hasAuthFailed && this.showAdminLogin"
+      style="color: red; margin-top: 10px"
+    >
+      The provided key is not valid.
+    </div>
     <p *ngIf="this.showAdminLogin && this.isAdmin">Logged in as Admin</p>
   </div>
 </div>

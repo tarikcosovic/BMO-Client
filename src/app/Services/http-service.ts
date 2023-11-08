@@ -13,7 +13,10 @@ export class HttpService {
   constructor(httpClient: HttpClient, private configService: ConfigService) {
     this.httpClient = httpClient;
 
-    this.SetAuthHeader('28E47BAE-64E2-4FBF-9C3A-249DD8BFF154');
+    let cachedKey = localStorage.getItem('admin-key');
+
+    if (cachedKey) this.SetAuthHeader(cachedKey);
+    else this.SetAuthHeader('1e33293d-84d1-406b-ae55-793ed59937d7');
   }
 
   public GetDataAsync<T>(
