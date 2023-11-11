@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "nx serve",
+    "start": "nx serve --host=0.0.0.0",
     "build": "nx build",
     "watch": "nx build --watch --configuration development",
     "test": "nx test"
@@ -33,6 +33,7 @@
     "@nx/workspace": "16.9.1",
     "@schematics/angular": "~16.2.3",
     "@types/jasmine": "~4.3.0",
+    "@types/node": "^20.9.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
