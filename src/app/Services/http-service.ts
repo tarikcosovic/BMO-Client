@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ConfigService } from './config-service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class HttpService {
   readonly httpClient: HttpClient;
   headers: HttpHeaders = new HttpHeaders();
 
-  constructor(httpClient: HttpClient, private configService: ConfigService) {
+  constructor(httpClient: HttpClient) {
     this.httpClient = httpClient;
 
     let cachedKey = localStorage.getItem('admin-key');
@@ -23,7 +23,7 @@ export class HttpService {
     endpoint: string,
     headers?: HttpHeaders
   ): Observable<T> {
-    return this.httpClient.get<T>(this.configService.baseApiUrl + endpoint, {
+    return this.httpClient.get<T>(environment.apiUrl + endpoint, {
       headers: headers ?? this.headers,
     });
   }
@@ -34,7 +34,7 @@ export class HttpService {
     headers?: HttpHeaders
   ): Observable<T> {
     return this.httpClient.delete<T>(
-      this.configService.baseApiUrl + endpoint + '/delete/' + data,
+      environment.apiUrl + endpoint + '/delete/' + data,
       {
         headers: headers ?? this.headers,
       }

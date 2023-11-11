@@ -8,10 +8,10 @@ import {
 import { Subscription } from 'rxjs';
 import { CircularBuffer } from 'src/app/Common/CircularBuffer';
 import { Game, Score } from 'src/app/Common/types';
-import { ConfigService } from 'src/app/Services/config-service';
 import { GameService } from 'src/app/Services/game.service';
 import { ScoresService } from 'src/app/Services/scores.service';
 import { generateUsername } from 'friendly-username-generator';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -34,8 +34,7 @@ export class LeaderboardComponent {
   constructor(
     private scoreService: ScoresService,
     private gameService: GameService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private configService: ConfigService
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -174,14 +173,12 @@ export class LeaderboardComponent {
     }
   }
 
-  OnShareButton(event: any) {
-    let shareUrl = this.configService.baseApiUrl;
-    //TODO: Add your url here from appconfig, delete the below line when going to production
-    shareUrl =
-      'https://stackoverflow.com/questions/22037021/custom-facebook-share-button';
+  OnShareButton() {
+    let shareUrl = environment.apiUrl;
 
     let pictureUrl =
       'https://images.squarespace-cdn.com/content/v1/51b3dc8ee4b051b96ceb10de/1588964142291-FOFMWSNOZCM4RY20PMQ7/full-trailer-for-adventure-time-distant-lands-features-bmo-as-the-triumphant-hero-social.jpg?format=2500w';
+
     let shareTitle = 'BMO Global Leaderboards Top 100';
 
     let shareDescription =

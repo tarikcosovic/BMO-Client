@@ -15,14 +15,6 @@ export interface Score {
   game: Game | null;
 }
 
-export abstract class AppConfiguration {
-  baseApiUrl: string;
-
-  constructor(baseApiUrl: string = '') {
-    this.baseApiUrl = baseApiUrl;
-  }
-}
-
 export enum Role {
   User = 0,
   Admin,
