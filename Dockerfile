@@ -5,5 +5,5 @@ WORKDIR /project
 COPY . .
 RUN npm install
 
-EXPOSE 4200
+EXPOSE 80
 CMD ["npm", "start"]
